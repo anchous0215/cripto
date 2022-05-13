@@ -82,11 +82,6 @@ int main(int argc, char *argv[]) {
 	memcpy(iv1, iv, block_size);
 	
 	pid_t pid;
-	
-	double total_time = 0, part_time = 0;
-        clock_t time = 0, ptime = 0;
-        time = clock();
-	
 	if (parall) {
 	pid = fork();
 	if (pid == 0) {
@@ -104,17 +99,6 @@ int main(int argc, char *argv[]) {
 	}
 	else {
 		for (unsigned long int i = 0x0; i < 0xffffffff && password == 0xffffffff; i += 2) {
-                	if (!(i % 0xffff)) {
-				if (i == 0)
-					ptime = clock();
-				else {
-					part_time = (double) (clock() - ptime) / CLOCKS_PER_SEC;
-					if (part_time == 0)
-						part_time = 1; 
-					printf("Current: %08lx - %08lx | Speed: %d c/s\n", i - 0xffff, i, (int)((double) 0xffff / part_time));
-					ptime = clock();
-				}
-			}
 			memcpy(iv, iv1, block_size);
 			memset(key, 0x0, key_len);
                 	memset(opentext, 0x0, len_ct);
@@ -140,17 +124,6 @@ int main(int argc, char *argv[]) {
         }
         else {
                 for (unsigned long int i = 0x1; i < 0xfffffffe && password == 0xffffffff; i += 2) {
-                        /*if (!(i % 0xffff)) {
-                                if (i == 0)
-                                        ptime = clock();
-                                else {
-                                        part_time = (double) (clock() - ptime) / CLOCKS_PER_SEC;
-                                        if (part_time == 0)
-                                                part_time = 1;
-                                        printf("Current: %08lx - %08lx | Speed: %d c/s\n", i - 0xffff, i, (int)((double) 0xffff / part_time));
-                                        ptime = clock();
-                                }
-                        }*/
                         memcpy(iv, iv1, block_size);
                         memset(key, 0x0, key_len);
                         memset(opentext, 0x0, len_ct);
@@ -162,7 +135,6 @@ int main(int argc, char *argv[]) {
         }
 	}
 	}
-////////////////////////////////
 	else {
 		if (verbose == 0) {
                 for (unsigned long int i = 0x0; i < 0xffffffff && password == 0xffffffff; i += 1) {
@@ -178,17 +150,6 @@ int main(int argc, char *argv[]) {
         }
         else {
                 for (unsigned long int i = 0x0; i < 0xffffffff && password == 0xffffffff; i += 1) {
-                        if (!(i % 0xffff)) {
-                                if (i == 0)
-                                        ptime = clock();
-                                else {
-                                        part_time = (double) (clock() - ptime) / CLOCKS_PER_SEC;
-                                        if (part_time == 0)
-                                                part_time = 1;
-                                        printf("Current: %08lx - %08lx | Speed: %d c/s\n", i - 0xffff, i, (int)((double) 0xffff / part_time));
-                                        ptime = clock();
-                                }
-                        }
                         memcpy(iv, iv1, block_size);
                         memset(key, 0x0, key_len);
                         memset(opentext, 0x0, len_ct);
@@ -198,17 +159,6 @@ int main(int argc, char *argv[]) {
                                 password &= i;
                 }
         }
-	}
-	
-	time = clock() - time;
-	total_time = (double) time / CLOCKS_PER_SEC;
-	if (total_time == 0)
-		total_time = 1;
-	printf("Found: %08lx | Speed: %d c/s\n", password, (int) ((double) password / total_time));
-	if (parall) {
-                if (pid == 0)
-                        exit(0);
-        
 	}		
 	free(hash), free(cipher), free(iv1), free(nonce), free(iv), free(ct), free(opentext), free(pass);
 	return 0;
