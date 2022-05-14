@@ -1,2 +1,2 @@
 all:
-	gcc -Wall -o cipher cipher.c func.c
+	gcc -Wall -o cipher main.c
