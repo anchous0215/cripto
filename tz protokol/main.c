@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
 	unsigned char enc, type_c = 0x1, type_h = 0x1, *opentext = NULL, *ciphtext = NULL, *nonce = NULL, *iv = NULL, *iv1 = NULL, *password = calloc(4, 1), *key = NULL;
 	int len_key = 16, len = 0, block_size = 16, opt = 0, long_index = 0, arguments = 0;
 	FILE *inp, *out;
-	srand(time(NULL));
 	while ((opt = getopt_long(argc, argv, ":p:i:o:h:edv:a:n:l", long_options, &long_index)) != -1) {
                     switch (opt) {
 		    case 'l': help();
