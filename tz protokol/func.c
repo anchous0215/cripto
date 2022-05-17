@@ -1,12 +1,16 @@
 #include "func.h"
 
 
-int len_find(char *type_c, char *type_h, unsigned char *c, unsigned char *h, int *block_size) {
+void my_free(void *pointer) {
+	if (pointer != NULL)
+		free(pointer);
+}
+
+int len_find(char *type_c, char *type_h, unsigned char *c, unsigned char *h) {
 	int len = 0;
 	if (type_c[0] == '3') {
                 len = 24;//
 		*c = 0x0;
-		*block_size = 8;
 	} 
         else if (type_c[3] == '2') {
                 len = 32;
@@ -27,7 +31,7 @@ int len_find(char *type_c, char *type_h, unsigned char *c, unsigned char *h, int
 	return len;
 }
 
-int def_len(unsigned char type_h, unsigned char type_c, char *hash, char *cipher, int *block_size) {
+int def_len(unsigned char type_h, unsigned char type_c, char *hash, char *cipher) {
 	int len = 0;
 	if (type_h == 0x0)
 		memcpy(hash, "md5", 3);
@@ -36,7 +40,6 @@ int def_len(unsigned char type_h, unsigned char type_c, char *hash, char *cipher
 	if (type_c == 0x0) {
 		memcpy(cipher, "3des", 4);
 		len = 24;//
-		*block_size = 8;
 	}
 	else if (type_c == 0x1) {
 		memcpy(cipher, "aes128", 6);
@@ -58,11 +61,6 @@ int check(char *code, char hash, char cipher) {
 		return 1;
 	else
 		return 0;
-}
-
-void my_free(void *pointer) {
-	if (pointer != NULL)
-		free(pointer);
 }
 
 int compare(unsigned char *s1) {
@@ -289,8 +287,4 @@ unsigned char *decrypt_text(unsigned char *in, size_t in_len, unsigned char *iv,
         else
                 des3_cbc_decrypt(in, in_len, iv, key, open_text);
         return open_text;
-}
-
-void help() {
-	printf("Necesary attributes:\n-e (--enc) - encryption or -d (--dec) - decryption\n-p (--pass) - 4th bytes password\n-i (--input) - input filepath\n-o (--output) - output filepath\nAdding attributes:\n-h (--hmac) - hmac function md5/sha1\n-a (--alg) - algoritm of cyphering 3des/as=es128/aes192/aes256\n-n (--nonce) - 16th bytes nonce\n-v (--iv) vector initilization\n-l (--help) help with arguments\nFor example:\n./crypter -e -p 00000000 -i 1.txt -o 1.enc\nor\n./crypter -e -p 00000000 -h md5 -a aes128 --iv 00000000000000000000000000000000 -i 1.txt -o 1.enc\n");
 }
