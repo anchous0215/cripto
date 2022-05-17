@@ -1,3 +1,3 @@
 
 all:
-	gcc -g -Wall main.c func.c -lssl -lcrypto -o main
+	gcc -g -Wall crypter.c func.c -lssl -lcrypto -o crypter
